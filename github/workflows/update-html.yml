@@ -1,0 +1,46 @@
+name: Update HTML on Commit
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-html:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Update HTML file
+      run: |
+        echo '<!DOCTYPE html>' > index.html
+        echo '<html lang="pt-br">' >> index.html
+        echo '<head>' >> index.html
+        echo '    <meta charset="UTF-8">' >> index.html
+        echo '    <meta name="viewport" content="width=device-width, initial-scale=1.0">' >> index.html
+        echo '    <title>Hello, World!</title>' >> index.html
+        echo '</head>' >> index.html
+        echo '<body>' >> index.html
+        echo '    <h1>Hello, World!</h1>' >> index.html
+        echo '</body>' >> index.html
+        echo '</html>' >> index.html
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add index.html
+        git commit -m 'Update HTML file automatically'
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
